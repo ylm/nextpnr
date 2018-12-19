@@ -1,0 +1,3 @@
+set_io btn 20
+set_io d0 12
+set_io d1 13
