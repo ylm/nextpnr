@@ -128,6 +128,16 @@ void arch_wrap_python()
     fn_wrapper_1a<Context, decltype(&Context::getBelPackagePin), &Context::getBelPackagePin, pass_through<std::string>,
                   conv_from_str<BelId>>::def_wrap(ctx_cls, "getBelPackagePin");
 
+    fn_wrapper_1a<Context, decltype(&Context::getDelayNS), &Context::getDelayNS, pass_through<float>,
+                  pass_through<delay_t>>::def_wrap(ctx_cls, "getDelayNS");
+    fn_wrapper_2a<Context, decltype(&Context::estimateDelay), &Context::estimateDelay, pass_through<delay_t>,
+                  conv_from_str<WireId>, conv_from_str<WireId>>::def_wrap(ctx_cls, "estimateDelay");
+
+    fn_wrapper_1a<Context, decltype(&Context::getBelLocation), &Context::getBelLocation, pass_through<Loc>,
+                  conv_from_str<BelId>>::def_wrap(ctx_cls, "getBelLocation");
+    fn_wrapper_1a<Context, decltype(&Context::getPipLocation), &Context::getPipLocation, pass_through<Loc>,
+                  conv_from_str<PipId>>::def_wrap(ctx_cls, "getPipLocation");
+
     fn_wrapper_0a<Context, decltype(&Context::getChipName), &Context::getChipName, pass_through<std::string>>::def_wrap(
             ctx_cls, "getChipName");
     fn_wrapper_0a<Context, decltype(&Context::archId), &Context::archId, conv_to_str<IdString>>::def_wrap(ctx_cls,

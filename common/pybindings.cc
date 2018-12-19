@@ -23,6 +23,7 @@
 #include "pybindings.h"
 #include "arch_pybindings.h"
 #include "jsonparse.h"
+#include "log.h"
 #include "nextpnr.h"
 
 #include <fstream>
@@ -100,6 +101,25 @@ BOOST_PYTHON_MODULE(MODULE_NAME)
             .value("PORT_OUT", PORT_OUT)
             .value("PORT_INOUT", PORT_INOUT)
             .export_values();
+
+    enum_<PlaceStrength>("PlaceStrength")
+            .value("STRENGTH_NONE", STRENGTH_NONE)
+            .value("STRENGTH_WEAK", STRENGTH_WEAK)
+            .value("STRENGTH_STRONG", STRENGTH_STRONG)
+            .value("STRENGTH_FIXED", STRENGTH_FIXED)
+            .value("STRENGTH_LOCKED", STRENGTH_LOCKED)
+            .value("STRENGTH_USER", STRENGTH_USER)
+            .export_values();
+
+    class_<DelayInfo>("DelayInfo", no_init)
+            .def("minRaiseDelay", &DelayInfo::minRaiseDelay)
+            .def("maxRaiseDelay", &DelayInfo::maxRaiseDelay)
+            .def("minFallDelay", &DelayInfo::minFallDelay)
+            .def("maxFallDelay", &DelayInfo::maxFallDelay)
+            .def("minDelay", &DelayInfo::minDelay)
+            .def("maxDelay", &DelayInfo::maxDelay);
+
+    class_<Loc>("Loc").def_readwrite("x", &Loc::x).def_readwrite("y", &Loc::y).def_readwrite("z", &Loc::z);
 
     typedef std::unordered_map<IdString, std::string> AttrMap;
     typedef std::unordered_map<IdString, PortInfo> PortMap;
@@ -217,12 +237,14 @@ void execute_python_file(const char *python_file)
             fprintf(stderr, "Fatal error: file not found %s\n", python_file);
             exit(1);
         }
-        PyRun_SimpleFile(fp, python_file);
+        int err = PyRun_SimpleFile(fp, python_file);
+        if (err != 0)
+            log_error("Error occurred while executing Python script\n");
         fclose(fp);
     } catch (boost::python::error_already_set const &) {
         // Parse and output the exception
         std::string perror_str = parse_python_exception();
-        std::cout << "Error in Python: " << perror_str << std::endl;
+        log_error("Unhandled Python Exception: %s\n", perror_str.c_str());
     }
 }
 
