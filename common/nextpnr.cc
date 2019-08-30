@@ -19,6 +19,7 @@
 
 #include "nextpnr.h"
 #include <boost/algorithm/string.hpp>
+#include "design_utils.h"
 #include "log.h"
 
 NEXTPNR_NAMESPACE_BEGIN
@@ -184,6 +185,10 @@ Property Property::from_string(const std::string &s)
     }
     return p;
 }
+
+void CellInfo::setParam(IdString name, std::string value) { params[name] = Property::from_string(value); }
+
+void CellInfo::setAttr(IdString name, std::string value) { attrs[name] = Property::from_string(value); }
 
 void BaseCtx::addConstraint(std::unique_ptr<TimingConstraint> constr)
 {
@@ -497,6 +502,14 @@ void BaseCtx::createRectangularRegion(IdString name, int x0, int y0, int x1, int
     }
     region[name] = std::move(new_region);
 }
+
+void BaseCtx::makeConnection(IdString netname, IdString cellname, IdString portname)
+{
+    NetInfo *net = nets[netname].get();
+    CellInfo *cell = cells[cellname].get();
+    connect_port(getCtx(), net, cell, portname);
+}
+
 void BaseCtx::addBelToRegion(IdString name, BelId bel) { region[name]->bels.insert(bel); }
 void BaseCtx::constrainCellToRegion(IdString cell, IdString region_name)
 {

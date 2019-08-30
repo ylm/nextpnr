@@ -402,6 +402,8 @@ struct NetInfo : ArchNetInfo
     TimingConstrObjectId tmg_id;
 
     Region *region = nullptr;
+
+    void connectTo(CellInfo *cell, IdString port);
 };
 
 enum PortType
@@ -445,6 +447,10 @@ struct CellInfo : ArchCellInfo
 
     Region *region = nullptr;
     TimingConstrObjectId tmg_id;
+
+    // For Python bindings
+    void setParam(IdString name, std::string value);
+    void setAttr(IdString name, std::string value);
 };
 
 enum TimingPortClass
@@ -746,6 +752,7 @@ struct BaseCtx
     void createRectangularRegion(IdString name, int x0, int y0, int x1, int y1);
     void addBelToRegion(IdString name, BelId bel);
     void constrainCellToRegion(IdString cell, IdString region_name);
+    void makeConnection(IdString netname, IdString cellname, IdString portname);
 
     // Workaround for lack of wrappable constructors
     DecalXY constructDecalXY(DecalId decal, float x, float y);

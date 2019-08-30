@@ -435,7 +435,8 @@ class Ecp5GlobalRouter
         log_info("Promoting globals...\n");
         auto clocks = get_clocks();
         for (auto clock : clocks) {
-            bool is_noglobal = bool_or_default(clock->attrs, ctx->id("noglobal"), false);
+            bool is_noglobal = bool_or_default(clock->attrs, ctx->id("noglobal"), false) ||
+                               bool_or_default(clock->attrs, ctx->id("ECP5_IS_GLOBAL"), false);
             if (is_noglobal)
                 continue;
             log_info("    promoting clock net %s to global network\n", clock->name.c_str(ctx));
@@ -461,6 +462,8 @@ class Ecp5GlobalRouter
             CellInfo *ci = cell.second;
             if (ci->type == id_DCCA) {
                 NetInfo *clock = ci->ports.at(id_CLKO).net;
+                if (!clock->wires.empty())
+                    continue;
                 NPNR_ASSERT(clock != nullptr);
                 bool drives_fabric = std::any_of(clock->users.begin(), clock->users.end(),
                                                  [this](const PortRef &port) { return !is_clock_port(port); });

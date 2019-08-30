@@ -141,6 +141,8 @@ void arch_wrap_python()
     fn_wrapper_2a_v<Context, decltype(&Context::constrainCellToRegion), &Context::constrainCellToRegion,
                     conv_from_str<IdString>, conv_from_str<IdString>>::def_wrap(ctx_cls, "constrainCellToRegion");
 
+    fn_wrapper_3a_v<Context, decltype(&Context::makeConnection), &Context::makeConnection, conv_from_str<IdString>,
+                    conv_from_str<IdString>, conv_from_str<IdString>>::def_wrap(ctx_cls, "makeConnection");
     WRAP_RANGE(Bel, conv_to_str<BelId>);
     WRAP_RANGE(Wire, conv_to_str<WireId>);
     WRAP_RANGE(AllPip, conv_to_str<PipId>);

@@ -159,6 +159,10 @@ BOOST_PYTHON_MODULE(MODULE_NAME)
                       pass_through<PlaceStrength>>::def_wrap(ci_cls, "belStrength");
     readonly_wrapper<CellInfo &, decltype(&CellInfo::pins), &CellInfo::pins, wrap_context<PinMap &>>::def_wrap(ci_cls,
                                                                                                                "pins");
+    fn_wrapper_2a_v<CellInfo &, decltype(&CellInfo::setParam), &CellInfo::setParam, conv_from_str<IdString>,
+                    pass_through<std::string>>::def_wrap(ci_cls, "setParam");
+    fn_wrapper_2a_v<CellInfo &, decltype(&CellInfo::setAttr), &CellInfo::setAttr, conv_from_str<IdString>,
+                    pass_through<std::string>>::def_wrap(ci_cls, "setAttr");
 
     auto pi_cls = class_<ContextualWrapper<PortInfo &>>("PortInfo", no_init);
     readwrite_wrapper<PortInfo &, decltype(&PortInfo::name), &PortInfo::name, conv_to_str<IdString>,

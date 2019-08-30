@@ -400,7 +400,7 @@ struct Router1
 
                 dst_to_arc[dst_wire] = arc;
 
-                if (net_info->wires.count(src_wire) == 0) {
+                if (net_info->wires.count(dst_wire) == 0) {
                     arc_queue_insert(arc, src_wire, dst_wire);
                     continue;
                 }
