@@ -113,6 +113,14 @@ struct ArcBounds
     };
 
     bool contains(int x, int y) const { return x >= x0 && y >= y0 && x <= x1 && y <= y1; }
+
+	void extend(Loc loc)
+	{
+		x0 = std::min(x0, loc.x);
+		y0 = std::min(y0, loc.y);
+		x1 = std::max(x1, loc.x);
+		y1 = std::max(y1, loc.y);
+	}
 };
 
 enum PlaceStrength

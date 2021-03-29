@@ -333,11 +333,12 @@ struct OcularRouter
             if (!ni->wires.empty()) {
                 bool invalid_route = false;
                 for (auto &usr : ni->users) {
-                    WireId wire = ctx->getNetinfoSinkWire(ni, usr);
-                    if (!ni->wires.count(wire))
-                        invalid_route = true;
-                    else if (ni->wires.at(wire).strength > STRENGTH_STRONG)
-                        nd.fixed_routing = true;
+                    for (WireId wire : ctx->getNetinfoSinkWires(ni, usr)) {
+						if (!ni->wires.count(wire))
+							invalid_route = true;
+						else if (ni->wires.at(wire).strength > STRENGTH_STRONG)
+							nd.fixed_routing = true;
+					}
                 }
                 if (nd.fixed_routing) {
                     if (invalid_route)
@@ -599,9 +600,10 @@ struct OcularRouter
         // Endpoint list
         ifn.endpoints.clear();
         for (auto &usr : nd.ni->users) {
-            WireId dst_wire = ctx->getNetinfoSinkWire(nd.ni, usr);
-            int32_t dst_wire_idx = wire_to_index.at(dst_wire);
-            ifn.endpoints.push_back(dst_wire_idx);
+            for (WireId dst_wire : ctx->getNetinfoSinkWires(nd.ni, usr)) {
+				int32_t dst_wire_idx = wire_to_index.at(dst_wire);
+				ifn.endpoints.push_back(dst_wire_idx);
+			}
         }
         // 'Unbind' existing routing
         for (auto &rr : nd.routing)
