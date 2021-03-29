@@ -56,7 +56,7 @@ else()
         endif()
 
         find_path(TRELLIS_LIBDIR ${pytrellis_lib}
-            HINTS ${TRELLIS_INSTALL_PREFIX}/lib/${TRELLIS_PROGRAM_PREFIX}trellis
+			HINTS ${TRELLIS_INSTALL_PREFIX}/lib/${TRELLIS_PROGRAM_PREFIX}trellis ${TRELLIS_INSTALL_PREFIX}/lib64/${TRELLIS_PROGRAM_PREFIX}trellis
             PATHS ${pytrellis_paths}
             PATH_SUFFIXES ${TRELLIS_PROGRAM_PREFIX}trellis
             DOC "Location of the pytrellis library")
